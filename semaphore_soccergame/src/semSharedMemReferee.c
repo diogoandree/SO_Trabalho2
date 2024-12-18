@@ -183,7 +183,7 @@ static void waitForTeams ()
     }
 
     /* TODO: insert your code here */
-    for(int i = 0; i < 2; i++){                                                                       //alterar macro!!
+    for(int i = 0; i < (NUMPLAYERS/(NUMTEAMPLAYERS + NUMTEAMGOALIES)); i++){                                                                       //alterar macro!!
         if (semDown(semgid, sh->refereeWaitTeams) == -1){
             perror("error on the up operation for semaphore acess (RF)");
             exit (EXIT_FAILURE);
@@ -222,6 +222,10 @@ static void startGame ()
             perror("error on the up operation for sempahore acess (RF)");
             exit(EXIT_FAILURE);
         } 
+        if (semDown(semgid, sh->playing) == -1){
+            perror("error on the operation for semaphore acess (RF)");
+            exit(EXIT_FAILURE);
+        }
     }
 }
 

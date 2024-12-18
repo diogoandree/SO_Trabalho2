@@ -187,17 +187,11 @@ static int playerConstituteTeam (int id)
     if (sh->fSt.playersArrived <= 8){ // 
         if (sh->fSt.playersFree >= NUMTEAMPLAYERS && sh->fSt.goaliesFree >= NUMTEAMGOALIES){ 
 
-            // código para o player capitão
-
             sh->fSt.st.playerStat[id] = FORMING_TEAM;
-
             sh->fSt.playersFree -= NUMTEAMPLAYERS;
             sh->fSt.goaliesFree -= NUMTEAMGOALIES;
 
-            // SEMÁFOROS
-            // colocamos o semaforo Up para os restantes jogadores(3) (sem contar com o capitão)
-
-            for (int p = 0; p < 3; p++){
+            for (int i = 0; i < (NUMTEAMPLAYERS - 1); i++){
                 if (semUp (semgid, sh->playersWaitTeam) == -1) {                                                   
                     perror ("error on the up operation for semaphore access (PL)");
                     exit (EXIT_FAILURE);
@@ -214,7 +208,7 @@ static int playerConstituteTeam (int id)
             // colocamos o semaforo down para registar os jogadores na equipa 
             // (sem contar com capitão pois ele forma a equipa)
 
-            for (int p = 0; p < 4; p++){
+            for (int i = 0; i < (NUMTEAMPLAYERS - 1); i++){
                 if (semDown (semgid, sh->playerRegistered) == -1) {                                                         
                     perror ("error on the down operation for semaphore access (PL)");
                     exit (EXIT_FAILURE);
@@ -234,6 +228,7 @@ static int playerConstituteTeam (int id)
             saveState(nFic, &sh->fSt);
 
         }
+
     } else {
 
         // código para um player que chega atrasado 
