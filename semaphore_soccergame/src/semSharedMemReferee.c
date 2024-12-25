@@ -135,6 +135,7 @@ int main (int argc, char *argv[])
  *  The internal state should be saved.
  *
  */
+
 static void arrive ()
 {
     if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
@@ -143,8 +144,7 @@ static void arrive ()
     }
 
     /* TODO: insert your code here */
-    // update referee state
-    sh->fSt.st.refereeStat = ARRIVINGR;
+    sh->fSt.st.refereeStat = ARRIVINGR;                                                           /* update referee state*/
     saveState(nFic, &sh->fSt);
     
 
@@ -164,6 +164,7 @@ static void arrive ()
  *  The internal state should be saved.
  *
  */
+
 static void waitForTeams ()
 {
     if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
@@ -172,8 +173,7 @@ static void waitForTeams ()
     }
 
     /* TODO: insert your code here */
-    //update referee state
-    sh->fSt.st.refereeStat = WAITING_TEAMS;
+    sh->fSt.st.refereeStat = WAITING_TEAMS;                                                       /*update referee state*/
     saveState(nFic, &sh->fSt);
     
 
@@ -183,7 +183,7 @@ static void waitForTeams ()
     }
 
     /* TODO: insert your code here */
-    for(int i = 0; i < (NUMPLAYERS/(NUMTEAMPLAYERS + NUMTEAMGOALIES)); i++){                                                                       //alterar macro!!
+    for(int i = 0; i < (NUMPLAYERS/(NUMTEAMPLAYERS + NUMTEAMGOALIES)); i++){                      /*waits for both teams*/                                                             //alterar macro!!
         if (semDown(semgid, sh->refereeWaitTeams) == -1){
             perror("error on the up operation for semaphore acess (RF)");
             exit (EXIT_FAILURE);
@@ -198,6 +198,7 @@ static void waitForTeams ()
  *  The internal state should be saved.
  *
  */
+
 static void startGame ()
 {
     if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
@@ -206,8 +207,7 @@ static void startGame ()
     }
 
     /* TODO: insert your code here */
-    //update referee state
-    sh->fSt.st.refereeStat = STARTING_GAME;
+    sh->fSt.st.refereeStat = STARTING_GAME;                                                       /* update referee state*/
     saveState(nFic, &sh->fSt);
     
 
@@ -217,12 +217,12 @@ static void startGame ()
     }
 
     /* TODO: insert your code here */
-    for(int i = 0; i < NUMPLAYERS; i++){
+    for(int i = 0; i < NUMPLAYERS; i++){                                                          /*notifies players*/
         if (semUp(semgid, sh->playersWaitReferee) == -1){
             perror("error on the up operation for sempahore acess (RF)");
             exit(EXIT_FAILURE);
         } 
-        if (semDown(semgid, sh->playing) == -1){
+        if (semDown(semgid, sh->playing) == -1){                                                  /*waits players confirmation*/      
             perror("error on the operation for semaphore acess (RF)");
             exit(EXIT_FAILURE);
         }
@@ -236,6 +236,8 @@ static void startGame ()
  *  The internal state should be saved.
  *
  */
+
+
 static void play ()
 {
     if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
@@ -243,8 +245,7 @@ static void play ()
         exit (EXIT_FAILURE);
     }
 
-    /* TODO: insert your code here */
-    // update referee state
+    /* TODO: insert your code here */                                                             /*update referee state*/
     sh->fSt.st.refereeStat = REFEREEING;
     saveState(nFic, &sh->fSt);
     
@@ -264,6 +265,8 @@ static void play ()
  *  The internal state should be saved.
  *
  */
+
+
 static void endGame ()
 {
     if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
@@ -272,8 +275,7 @@ static void endGame ()
     }
 
     /* TODO: insert your code here */
-    //update referee state 
-    sh->fSt.st.refereeStat = ENDING_GAME;
+    sh->fSt.st.refereeStat = ENDING_GAME;                                                         /*update referee state*/
     saveState(nFic, &sh->fSt);
 
 
@@ -284,10 +286,11 @@ static void endGame ()
 
     /* TODO: insert your code here */
 
-    for(int i = 0; i < NUMPLAYERS; i++){
+    for(int i = 0; i < NUMPLAYERS; i++){                                                          /*notifies players*/
         if (semUp(semgid, sh->playersWaitEnd) == -1){
             perror("error on the up operation for sempahore acess (RF)");
             exit (EXIT_FAILURE);
         }
     }
 }
+
